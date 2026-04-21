@@ -7,8 +7,12 @@ yarn-error.log*
 pnpm-debug.log*
 lerna-debug.log*
 
+# Dependencies
 node_modules
 *.local
+
+# Production - මම මෙතන dist සහ build කියන පේළි අයින් කරා 
+# එතකොට විතරයි GitHub එකට ඔයාගේ build එක පේන්නේ.
 
 # Editor directories and files
 .vscode/*

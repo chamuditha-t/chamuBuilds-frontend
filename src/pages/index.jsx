@@ -75,10 +75,10 @@ const PROJECTS = [
 ];
 
 const PHASES = [
-  { name: "Coding Genesis", desc: "DSA fundamentals + live code execution", done: true, icon: "🌱" },
-  { name: "Architect's Path", desc: "System design + architecture patterns", done: true, icon: "🏗️" },
+  { name: "Coding Genesis", desc: "DSA fundamentals + live code execution", done: true, active: true, icon: "🌱" },
+  { name: "Architect's Path", desc: "System design + architecture patterns", done: true, active: false, icon: "🏗️" },
   { name: "Industry Bound", desc: "Real-world stacks + hands-on tasks", done: false, active: true, icon: "⚡" },
-  { name: "Interview Ace", desc: "Mock interviews + AI feedback", done: false, icon: "🎯" },
+  { name: "Interview Ace", desc: "Mock interviews + AI feedback", done: false, active: false, icon: "🎯" },
 ];
 
 const GITHUB_STATS = {
@@ -95,6 +95,7 @@ export default function ChamuBuilds() {
   const [formData, setFormData] = useState({ name: "", email: "", message: "" });
   const [formStatus, setFormStatus] = useState(null);
   const [cursorVisible, setCursorVisible] = useState(true);
+  const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
 
   useEffect(() => {
     const handleScroll = () => setScrolled(window.scrollY > 50);
@@ -114,9 +115,12 @@ export default function ChamuBuilds() {
     e.preventDefault();
     if (formData.name && formData.email && formData.message) {
       setFormStatus("success");
-
-      const respnose = await axios.post('http://localhost:3000/api/messages', formData);
-      console.log(respnose);
+      try {
+        const response = await axios.post('http://localhost:3000/api/messages', formData);
+        console.log(response);
+      } catch (error) {
+        console.log("API not available, but form submitted locally");
+      }
       setFormData({ name: "", email: "", message: "" });
       setTimeout(() => setFormStatus(null), 3000);
     } else {
@@ -128,88 +132,445 @@ export default function ChamuBuilds() {
   const currentProject = PROJECTS.find(p => p.id === activeProject);
 
   return (
-    <div style={{ background: '#080808', color: '#c8c8c8', minHeight: '100vh', fontFamily: "'Syne', sans-serif" }}>
+    <div className="bg-[#080808] text-[#c8c8c8] min-h-screen font-['Syne',sans-serif] overflow-x-hidden">
+      {/* Dot grid background */}
+      <div className="dot-grid fixed inset-0 z-0 pointer-events-none" />
+
+      {/* NAV - Responsive */}
+      <nav className={`fixed top-0 w-full z-50 transition-all duration-500 ${
+        scrolled ? 'bg-black/85 backdrop-blur-xl border-b border-amber-500/10 py-3' : 'bg-transparent py-5 md:py-7'
+      }`}>
+        <div className="max-w-6xl mx-auto px-5 md:px-8 flex justify-between items-center">
+          <div className="flex items-center gap-2.5">
+            <span className="w-1.5 h-1.5 bg-amber-500 rounded-full pulse" />
+            <span className="font-extrabold text-base md:text-lg tracking-tighter text-[#f0f0f0]">
+              CHAMU<span className="text-amber-500">.</span>BUILDS
+            </span>
+          </div>
+          
+          {/* Desktop Navigation */}
+          <div className="hidden md:flex gap-9">
+            <a href="#expertise" className="nav-link text-xs tracking-wider text-[#555] hover:text-amber-500 transition-all duration-200 relative after:content-[''] after:absolute after:bottom-[-4px] after:left-0 after:w-0 after:h-px after:bg-amber-500 after:transition-all hover:after:w-full">/expertise</a>
+            <a href="#work" className="nav-link text-xs tracking-wider text-[#555] hover:text-amber-500 transition-all duration-200 relative after:content-[''] after:absolute after:bottom-[-4px] after:left-0 after:w-0 after:h-px after:bg-amber-500 after:transition-all hover:after:w-full">/work</a>
+            <a href="#building" className="nav-link text-xs tracking-wider text-[#555] hover:text-amber-500 transition-all duration-200 relative after:content-[''] after:absolute after:bottom-[-4px] after:left-0 after:w-0 after:h-px after:bg-amber-500 after:transition-all hover:after:w-full">/now</a>
+            <a href="#contact" className="nav-link text-xs tracking-wider text-[#555] hover:text-amber-500 transition-all duration-200 relative after:content-[''] after:absolute after:bottom-[-4px] after:left-0 after:w-0 after:h-px after:bg-amber-500 after:transition-all hover:after:w-full">/ping</a>
+          </div>
+          
+          {/* Mobile Menu Button */}
+          <button 
+            onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
+            className="md:hidden text-[#f0f0f0] text-2xl focus:outline-none z-50 relative"
+          >
+            {mobileMenuOpen ? '✕' : '☰'}
+          </button>
+          
+          {/* Desktop Hire Button */}
+          <a href="#contact" className="hidden md:inline-block bg-amber-500 text-black px-5 py-2 rounded-full text-xs font-bold hover:bg-amber-400 transition-all hover:scale-105">
+            hire me
+          </a>
+        </div>
+        
+        {/* Mobile Menu */}
+        {mobileMenuOpen && (
+          <div className="md:hidden absolute top-full left-0 w-full bg-black/95 backdrop-blur-xl border-b border-amber-500/20 py-6 px-5 flex flex-col gap-5 z-40">
+            <a href="#expertise" onClick={() => setMobileMenuOpen(false)} className="text-sm text-[#ccc] hover:text-amber-500 transition-colors font-mono tracking-wider">/expertise</a>
+            <a href="#work" onClick={() => setMobileMenuOpen(false)} className="text-sm text-[#ccc] hover:text-amber-500 transition-colors font-mono tracking-wider">/work</a>
+            <a href="#building" onClick={() => setMobileMenuOpen(false)} className="text-sm text-[#ccc] hover:text-amber-500 transition-colors font-mono tracking-wider">/now</a>
+            <a href="#contact" onClick={() => setMobileMenuOpen(false)} className="text-sm text-[#ccc] hover:text-amber-500 transition-colors font-mono tracking-wider">/ping</a>
+            <a href="#contact" onClick={() => setMobileMenuOpen(false)} className="bg-amber-500 text-black px-5 py-2 rounded-full text-xs font-bold text-center w-full">hire me</a>
+          </div>
+        )}
+      </nav>
+
+      <main className="relative z-10 max-w-6xl mx-auto px-5 md:px-8">
+
+        {/* HERO SECTION - Responsive */}
+        <section className="pt-28 md:pt-44 pb-16 md:pb-32">
+          <div className="mb-6 md:mb-7">
+            <span className="font-mono text-[10px] md:text-[11px] tracking-[0.2em] text-amber-500 bg-amber-500/10 border border-amber-500/20 px-3 py-1.5 rounded-full uppercase inline-block">
+              Final Year SWE · Birmingham City University · 2026
+            </span>
+          </div>
+
+          <h1 className="text-5xl sm:text-6xl md:text-7xl lg:text-[88px] font-extrabold leading-[1.05] md:leading-[0.92] tracking-tighter text-[#f0f0f0] mb-6 md:mb-8 max-w-4xl">
+            I build the tools<br />
+            I <span className="text-amber-500 italic border-b-2 border-amber-500">wished</span> I had.
+          </h1>
+
+          <p className="text-base md:text-xl text-[#666] max-w-lg leading-relaxed md:leading-[1.6] mb-8 md:mb-12">
+            Full-stack engineer. Java specialist. Cloud-native thinker.
+            Based in Colombo 🇱🇰 — building from first principles.
+          </p>
+
+          <div className="flex flex-wrap gap-3 md:gap-4 mb-10 md:mb-16">
+            <a href="#work" className="bg-amber-500 text-black px-5 md:px-8 py-3 md:py-3.5 rounded-full text-xs md:text-[13px] font-bold hover:bg-amber-400 transition-all hover:scale-105">see my work →</a>
+            <a href="#contact" className="bg-transparent text-[#888] border border-white/10 px-5 md:px-8 py-3 md:py-3.5 rounded-full text-xs md:text-[13px] font-semibold hover:border-amber-500/50 hover:text-amber-500 transition-all">/ping me</a>
+            <a href="#" className="bg-transparent text-[#888] border border-amber-500/20 px-5 md:px-8 py-3 md:py-3.5 rounded-full text-xs md:text-[13px] font-semibold hover:border-amber-500/50 hover:text-amber-500 transition-all">📄 resume.pdf</a>
+          </div>
+
+          {/* GitHub stats - responsive */}
+          <div className="flex flex-wrap gap-3 md:gap-6 p-4 md:p-6 bg-white/5 border border-white/5 rounded-2xl mb-6">
+            {Object.entries(GITHUB_STATS).map(([key, val]) => (
+              <div key={key} className="flex items-baseline gap-1.5 md:gap-2">
+                <span className="font-mono text-[9px] md:text-[10px] text-[#555] uppercase">{key}:</span>
+                <span className="text-base md:text-lg font-bold text-[#f0f0f0]">
+                  {typeof val === 'number' ? val.toLocaleString() : (Array.isArray(val) ? val.slice(0, 2).join(' · ') : val)}
+                </span>
+              </div>
+            ))}
+          </div>
+
+          {/* Identity tags - responsive wrap */}
+          <div className="flex flex-wrap gap-2 md:gap-2.5">
+            {[
+              '⚙ Robotics — All Island Competition',
+              '✦ AZ-900 Certified',
+              '◈ MERN · Java · Android',
+              '◉ Open for Internships 2026'
+            ].map(tag => (
+              <span key={tag} className="font-mono text-[10px] md:text-[11px] text-[#555] bg-white/5 border border-white/10 px-3 md:px-3.5 py-1.5 md:py-1.5 rounded-full">
+                {tag}
+              </span>
+            ))}
+          </div>
+        </section>
+
+        {/* EXPERTISE - Responsive 2 column, 1 on mobile */}
+        <section id="expertise" className="pb-20 md:pb-32">
+          <div className="mb-8 md:mb-12">
+            <span className="font-mono text-[10px] md:text-[11px] tracking-[0.15em] text-amber-500 uppercase">/expertise</span>
+            <h2 className="text-3xl md:text-4xl lg:text-[40px] font-extrabold text-[#f0f0f0] tracking-tighter mt-2 md:mt-2.5">
+              What I master.
+            </h2>
+            <p className="font-mono text-[11px] md:text-xs text-[#444] mt-1 md:mt-2">declared expertise, proven by shipped systems</p>
+          </div>
+
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-4 md:gap-5">
+            {EXPERTISE.map((item) => (
+              <div key={item.domain} className="card p-5 md:p-8">
+                <div className="flex justify-between items-start mb-3 md:mb-4">
+                  <span className="text-2xl md:text-[28px] text-amber-500">{item.icon}</span>
+                  <span className="font-mono text-[8px] md:text-[9px] text-amber-500 bg-amber-500/10 px-2 md:px-2.5 py-1 rounded-full">proof → {item.proof}</span>
+                </div>
+                <h3 className="text-lg md:text-xl font-bold text-[#f0f0f0] mb-1.5 md:mb-2 tracking-tight">
+                  {item.domain}
+                </h3>
+                <p className="font-mono text-[10px] md:text-[11px] text-[#555] mb-2 md:mb-3">{item.stack}</p>
+                <p className="text-xs md:text-[13px] text-[#666] leading-relaxed">{item.description}</p>
+              </div>
+            ))}
+          </div>
+        </section>
+
+        {/* WORK - Responsive layout: column on mobile, row on desktop */}
+        <section id="work" className="pb-20 md:pb-32">
+          <div className="flex flex-col md:flex-row justify-between items-start md:items-end mb-8 md:mb-12 gap-4 md:gap-5">
+            <div>
+              <span className="font-mono text-[10px] md:text-[11px] tracking-[0.15em] text-amber-500 uppercase">/work</span>
+              <h2 className="text-3xl md:text-4xl lg:text-[40px] font-extrabold text-[#f0f0f0] tracking-tighter mt-2">
+                Production systems.
+              </h2>
+              <p className="font-mono text-[11px] md:text-xs text-[#444] mt-1">each one is proof of the expertise above</p>
+            </div>
+            <div className="flex bg-white/5 border border-white/10 rounded-xl p-1 gap-0.5">
+              {['architecture', 'metrics', 'stack'].map(tab => (
+                <button
+                  key={tab}
+                  onClick={() => setActiveTab(tab)}
+                  className={`tab-btn text-[9px] md:text-[10px] px-3 md:px-4 py-1.5 md:py-2 ${activeTab === tab ? 'active' : ''}`}
+                >
+                  /{tab}
+                </button>
+              ))}
+            </div>
+          </div>
+
+          {/* Project selector + detail - responsive: column on mobile */}
+          <div className="flex flex-col md:flex-row gap-5 md:gap-6">
+            {/* Project selector - horizontal scroll on mobile, vertical on desktop */}
+            <div className="flex flex-row md:flex-col gap-2 md:gap-2 overflow-x-auto md:overflow-x-visible pb-3 md:pb-0">
+              {PROJECTS.map((p) => (
+                <div
+                  key={p.id}
+                  onClick={() => setActiveProject(p.id)}
+                  className={`project-btn flex-shrink-0 md:flex-shrink w-[220px] md:w-auto p-3 md:p-3 ${activeProject === p.id ? 'active' : ''}`}
+                >
+                  <div className="flex justify-between items-center mb-0.5">
+                    <span className={`font-bold text-sm md:text-base ${activeProject === p.id ? 'text-amber-500' : 'text-[#f0f0f0]'}`}>
+                      {p.title}
+                    </span>
+                    <span className="font-mono text-[7px] md:text-[8px] text-[#444]">{p.status}</span>
+                  </div>
+                  <p className="text-[10px] md:text-[11px] text-[#555]">{p.tagline}</p>
+                </div>
+              ))}
+            </div>
+
+            {/* Detail view */}
+            {currentProject && (
+              <div className="card p-5 md:p-9 flex-1">
+                <div className="flex flex-col sm:flex-row justify-between items-start gap-3 mb-4 md:mb-5">
+                  <div>
+                    <span className="font-mono text-[9px] md:text-[10px] text-amber-500 tracking-[0.15em] uppercase">
+                      {currentProject.category}
+                    </span>
+                    <h3 className="text-2xl md:text-[28px] font-extrabold text-[#f0f0f0] tracking-tighter mt-1.5">
+                      {currentProject.title}
+                    </h3>
+                    <p className="text-xs md:text-sm text-amber-500 italic mt-1">{currentProject.tagline}</p>
+                  </div>
+                  <div className="flex gap-2">
+                    <a href={currentProject.github} className="font-mono text-[10px] md:text-[11px] text-[#555] no-underline px-2 md:px-3 py-1.5 bg-white/5 rounded-lg">github →</a>
+                    <a href={currentProject.live} className="font-mono text-[10px] md:text-[11px] text-[#555] no-underline px-2 md:px-3 py-1.5 bg-white/5 rounded-lg">live →</a>
+                  </div>
+                </div>
+
+                <p className="text-sm md:text-sm text-[#888] leading-relaxed mb-5 md:mb-6">{currentProject.one_line}</p>
+
+                {activeTab === 'architecture' && (
+                  <div>
+                    <p className="font-mono text-[9px] md:text-[10px] text-amber-500 tracking-[0.15em] uppercase mb-3 md:mb-4">
+                      system architecture
+                    </p>
+                    <p className="text-sm md:text-[15px] text-[#c8c8c8] italic leading-relaxed border-l-2 border-amber-500 pl-4">
+                      "{currentProject.architecture}"
+                    </p>
+                  </div>
+                )}
+
+                {activeTab === 'metrics' && (
+                  <div className="grid grid-cols-2 sm:grid-cols-3 gap-4 md:gap-6">
+                    {Object.entries(currentProject.metrics).map(([k, v]) => (
+                      <div key={k}>
+                        <p className="font-mono text-[8px] md:text-[9px] text-[#555] uppercase tracking-[0.15em] mb-1.5">{k}</p>
+                        <p className="text-base md:text-xl font-bold text-[#f0f0f0] tracking-tight">{v}</p>
+                      </div>
+                    ))}
+                  </div>
+                )}
+
+                {activeTab === 'stack' && (
+                  <div className="flex flex-wrap gap-2 md:gap-2.5">
+                    {currentProject.tech.map(t => (
+                      <span key={t} className="font-mono text-[11px] md:text-xs text-[#888] bg-white/5 border border-white/10 px-2.5 md:px-4 py-1.5 md:py-2 rounded-lg">
+                        {t}
+                      </span>
+                    ))}
+                  </div>
+                )}
+              </div>
+            )}
+          </div>
+
+          <div className="mt-10 md:mt-14 flex justify-center">
+            <a href="/projects" className="bg-transparent text-[#888] border border-amber-500/20 px-6 md:px-8 py-3 md:py-3.5 rounded-full text-xs md:text-[13px] font-semibold hover:border-amber-500/50 hover:text-amber-500 transition-all inline-flex items-center gap-2 no-underline">
+              view all projects <span className="text-amber-500 text-sm md:text-base">→</span>
+            </a>
+          </div>
+        </section>
+
+        {/* CURRENTLY BUILDING - Responsive */}
+        <section id="building" className="pb-20 md:pb-32">
+          <span className="font-mono text-[10px] md:text-[11px] tracking-[0.15em] text-amber-500 uppercase">/now</span>
+          <h2 className="text-3xl md:text-4xl lg:text-[40px] font-extrabold text-[#f0f0f0] tracking-tighter mt-2 mb-8 md:mb-12">
+            Currently building <span className="text-amber-500">CodePrep</span>.
+          </h2>
+
+          <div className="flex flex-col md:flex-row gap-5 md:gap-6">
+            {/* Phase tracker */}
+            <div className="card p-5 md:p-9 flex-1">
+              <p className="font-mono text-[9px] md:text-[10px] text-[#555] tracking-[0.15em] uppercase mb-6 md:mb-7">
+                module roadmap
+              </p>
+              <div className="relative">
+                {PHASES.map((phase, i) => (
+                  <div key={phase.name} className="flex gap-4 md:gap-4 mb-6 md:mb-7 relative">
+                    {i < PHASES.length - 1 && (
+                      <div className={`absolute left-2.5 top-6 -bottom-6 w-px ${phase.done ? 'bg-amber-500/40' : 'bg-white/5'}`} />
+                    )}
+                    <div className={`w-5 h-5 rounded-full flex-shrink-0 mt-0.5 flex items-center justify-center ${
+                      phase.done ? 'bg-amber-500' : phase.active ? 'bg-transparent border-2 border-amber-500' : 'bg-white/10 border border-white/10'
+                    }`}>
+                      {phase.active && <span className="w-2 h-2 rounded-full bg-amber-500 pulse" />}
+                      {phase.done && <span className="text-[10px] text-black">✓</span>}
+                    </div>
+                    <div className="flex-1">
+                      <div className="flex items-center gap-2 mb-1">
+                        <span className="text-sm md:text-base">{phase.icon}</span>
+                        <p className={`text-sm md:text-sm font-semibold ${
+                          phase.done ? 'text-[#f0f0f0]' : phase.active ? 'text-amber-500' : 'text-[#444]'
+                        }`}>{phase.name}</p>
+                      </div>
+                      <p className="text-[11px] md:text-xs text-[#555] leading-relaxed">{phase.desc}</p>
+                    </div>
+                  </div>
+                ))}
+              </div>
+
+              <div className="mt-4 md:mt-5">
+                <div className="h-1 bg-white/10 rounded-full overflow-hidden">
+                  <div className="h-full w-[65%] bg-amber-500 rounded-full" />
+                </div>
+                <div className="flex justify-between mt-2">
+                  <span className="font-mono text-[9px] md:text-[10px] text-[#444]">Phase 3 of 4</span>
+                  <span className="font-mono text-[9px] md:text-[10px] text-amber-500">65% complete</span>
+                </div>
+              </div>
+            </div>
+
+            {/* Terminal */}
+            <div className="card p-0 overflow-hidden flex-1">
+              <div className="bg-white/5 px-4 md:px-5 py-3 border-b border-white/5 flex items-center gap-2">
+                {['#ef4444', '#f59e0b', '#22c55e'].map(c => (
+                  <span key={c} className="w-2.5 h-2.5 rounded-full opacity-60" style={{ background: c }} />
+                ))}
+                <span className="font-mono text-[9px] md:text-[10px] text-[#444] ml-2">codeprep — zsh</span>
+              </div>
+              <div className="p-5 md:p-7 font-mono">
+                <div className="mb-5 md:mb-6">
+                  <p className="text-[10px] md:text-[11px] text-[#444] mb-2 md:mb-3">$ git log --oneline -4</p>
+                  <div className="flex flex-col gap-2 md:gap-2.5">
+                    {[
+                      ['a3f91bc', '✨', 'feat: industry-bound task system scaffolded'],
+                      ['7d2e04a', '⚙️', 'feat: onecompiler api integration — live exec'],
+                      ['3b81cc2', '🐛', 'fix: 500 on /execute — endpoint url corrected'],
+                      ['9a14d71', '🔨', 'refactor: module phase gating logic'],
+                    ].map(([hash, emoji, msg]) => (
+                      <div key={hash} className="flex gap-2 md:gap-2.5 items-center text-[10px] md:text-[11px] flex-wrap">
+                        <span className="text-amber-500 flex-shrink-0">{hash}</span>
+                        <span className="text-xs md:text-xs">{emoji}</span>
+                        <span className="text-[#666] break-all">{msg}</span>
+                      </div>
+                    ))}
+                  </div>
+                </div>
+                <div className="border-t border-white/5 pt-4 md:pt-5">
+                  <div className="flex items-center gap-2 mb-2 md:mb-3">
+                    <span className="text-[10px] md:text-[11px] text-[#444]">$</span>
+                    <span className="text-[10px] md:text-[11px] text-[#f0f0f0]">npm run dev</span>
+                  </div>
+                  <p className="text-[10px] md:text-[11px] text-green-500 mb-3 md:mb-4">
+                    ▶ ready on localhost:3000
+                  </p>
+                  <div className="flex flex-col sm:flex-row items-start sm:items-center gap-2 sm:gap-0 justify-between">
+                    <div className="flex items-center gap-2">
+                      <span className="w-1.5 h-1.5 bg-amber-500 rounded-full pulse" />
+                      <span className="text-[9px] md:text-[10px] text-[#555]">last commit: 3 hours ago</span>
+                    </div>
+                    <div className="flex gap-1">
+                      <span className="text-[9px] md:text-[10px] text-[#444]">chamu@codeprep</span>
+                      <span className={`text-[9px] md:text-[10px] text-amber-500 ${cursorVisible ? 'opacity-100' : 'opacity-0'}`}>█</span>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        {/* CONTACT - Responsive */}
+        <section id="contact" className="pb-12 md:pb-20">
+          <div className="card p-5 md:p-16 rounded-3xl bg-gradient-to-br from-amber-500/5 via-white/5 to-transparent">
+            <div className="flex flex-col md:flex-row gap-8 md:gap-16 items-start">
+              <div className="flex-1">
+                <span className="font-mono text-[10px] md:text-[11px] tracking-[0.15em] text-amber-500 uppercase">/contact</span>
+                <h2 className="text-3xl md:text-4xl lg:text-[44px] font-extrabold text-[#f0f0f0] tracking-tighter leading-tight mt-3 mb-4">
+                  Let's build<br />something real.
+                </h2>
+                <p className="text-sm md:text-[15px] text-[#555] leading-relaxed mb-8 max-w-md">
+                  Open for Software Engineering internships, freelance work, or just a solid engineering conversation.
+                </p>
+                <div className="flex flex-col gap-3 md:gap-3.5">
+                  {[
+                    ['◈', 'github.com/chamuditha', 'https://github.com/chamuditha-t'],
+                    ['◉', 'linkedin.com/in/chamuditha', 'www.linkedin.com/in/chamuditha-theekshana-b138993a6'],
+                    ['◫', 'Colombo, Sri Lanka 🇱🇰', null],
+                  ].map(([icon, text, link]) => (
+                    link ? (
+                      <a key={text} href={link} target="_blank" rel="noopener noreferrer" className="flex items-center gap-3 no-underline group">
+                        <span className="text-amber-500 text-sm md:text-sm">{icon}</span>
+                        <span className="font-mono text-[11px] md:text-xs text-[#555] group-hover:text-amber-500 transition-colors">{text}</span>
+                      </a>
+                    ) : (
+                      <div key={text} className="flex items-center gap-3">
+                        <span className="text-amber-500 text-sm md:text-sm">{icon}</span>
+                        <span className="font-mono text-[11px] md:text-xs text-[#555]">{text}</span>
+                      </div>
+                    )
+                  ))}
+                </div>
+              </div>
+              <div className="flex-1 w-full">
+                <form onSubmit={handleSubmit} className="flex flex-col gap-3.5">
+                  <input
+                    type="text" placeholder="name"
+                    value={formData.name}
+                    onChange={e => setFormData({ ...formData, name: e.target.value })}
+                    className="w-full bg-white/5 border border-white/10 rounded-xl px-4 py-3 text-[#f0f0f0] text-sm outline-none focus:border-amber-500 transition-all"
+                    required
+                  />
+                  <input
+                    type="email" placeholder="email"
+                    value={formData.email}
+                    onChange={e => setFormData({ ...formData, email: e.target.value })}
+                    className="w-full bg-white/5 border border-white/10 rounded-xl px-4 py-3 text-[#f0f0f0] text-sm outline-none focus:border-amber-500 transition-all"
+                    required
+                  />
+                  <textarea
+                    rows={4} placeholder="what are you building?"
+                    value={formData.message}
+                    onChange={e => setFormData({ ...formData, message: e.target.value })}
+                    className="w-full bg-white/5 border border-white/10 rounded-xl px-4 py-3 text-[#f0f0f0] text-sm outline-none focus:border-amber-500 transition-all resize-none"
+                    required
+                  />
+                  <button type="submit" className="w-full bg-white text-black py-3.5 rounded-xl font-bold text-sm hover:bg-amber-500 transition-all">
+                    send message →
+                  </button>
+                  {formStatus === 'success' && (
+                    <p className="font-mono text-[11px] md:text-xs text-green-500 text-center">✓ sent! I'll reply within 48h.</p>
+                  )}
+                  {formStatus === 'error' && (
+                    <p className="font-mono text-[11px] md:text-xs text-red-500 text-center">✗ all fields required.</p>
+                  )}
+                </form>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <footer className="border-t border-white/5 py-8 md:py-10 text-center">
+          <p className="font-mono text-[9px] md:text-[10px] text-[#2a2a2a] tracking-[0.3em] md:tracking-[0.4em] uppercase">
+            © 2026 CHAMU.BUILDS · EXPERTISE FIRST · SYSTEMS THAT SCALE
+          </p>
+        </footer>
+
+      </main>
+
       <style>{`
-        @import url('https://fonts.googleapis.com/css2?family=Syne:wght@400;500;600;700;800&family=Fira+Code:wght@300;400;500&display=swap');
-
-        * { box-sizing: border-box; margin: 0; padding: 0; }
-        body { background: #080808; }
-        .fc { font-family: 'Fira Code', monospace; }
-
         .dot-grid {
           background-image: radial-gradient(rgba(245,158,11,0.03) 1px, transparent 1px);
           background-size: 32px 32px;
         }
-
-        .amber { color: #f59e0b; }
-        .white { color: #f0f0f0; }
-        .muted { color: #666; }
-
-        .card {
-          background: rgba(255,255,255,0.02);
-          border: 1px solid rgba(255,255,255,0.06);
-          border-radius: 24px;
-          transition: all 0.3s cubic-bezier(0.2, 0.9, 0.4, 1.1);
-        }
-        .card:hover {
-          border-color: rgba(245,158,11,0.25);
-          transform: translateY(-4px);
-        }
-
-        .tab-btn { 
-          background: transparent;
-          border: none;
-          cursor: pointer;
-          font-family: 'Fira Code', monospace;
-          font-size: 10px;
-          letter-spacing: 0.12em;
-          text-transform: uppercase;
-          padding: 8px 18px;
-          border-radius: 10px;
-          transition: all 0.2s ease;
-          color: #555;
-        }
-        .tab-btn:hover { color: #f0f0f0; }
-        .tab-btn.active { background: #f59e0b; color: #000; font-weight: 600; }
-
-        .project-btn {
-          background: rgba(255,255,255,0.03);
-          border: 1px solid rgba(255,255,255,0.06);
-          padding: 12px 20px;
-          border-radius: 16px;
-          cursor: pointer;
-          transition: all 0.2s ease;
-          text-align: left;
-        }
-        .project-btn.active {
-          border-color: #f59e0b;
-          background: rgba(245,158,11,0.08);
-        }
-        .project-btn:hover {
-          border-color: rgba(245,158,11,0.4);
-          transform: translateX(4px);
-        }
-
-        .pulse { 
+        .pulse {
           animation: pulse 2.5s ease-in-out infinite;
         }
         @keyframes pulse {
           0%, 100% { opacity: 1; }
           50% { opacity: 0.3; }
         }
-
-        .glow {
-          box-shadow: 0 0 20px rgba(245,158,11,0.1);
+        .card {
+          transition: all 0.3s cubic-bezier(0.2, 0.9, 0.4, 1.1);
         }
-
-        .nav-link {
-          color: #555;
-          text-decoration: none;
-          font-family: 'Fira Code', monospace;
-          font-size: 11px;
-          letter-spacing: 0.1em;
-          transition: all 0.2s;
-          position: relative;
+        .card:hover {
+          border-color: rgba(245,158,11,0.25);
+          transform: translateY(-4px);
+        }
+        .project-btn {
+          transition: all 0.2s ease;
+        }
+        .project-btn:hover {
+          border-color: rgba(245,158,11,0.4);
+          transform: translateX(4px);
         }
         .nav-link::after {
           content: '';
@@ -221,548 +582,16 @@ export default function ChamuBuilds() {
           background: #f59e0b;
           transition: width 0.2s;
         }
-        .nav-link:hover { color: #f59e0b; }
-        .nav-link:hover::after { width: 100%; }
-
-        .btn-primary {
-          background: #f59e0b;
-          color: #000;
-          border: none;
-          padding: 14px 32px;
-          border-radius: 50px;
-          font-family: 'Syne', sans-serif;
-          font-weight: 700;
-          font-size: 13px;
-          cursor: pointer;
-          transition: all 0.2s ease;
-          text-decoration: none;
-          display: inline-block;
-        }
-        .btn-primary:hover { background: #fbbf24; transform: scale(1.02); box-shadow: 0 4px 12px rgba(245,158,11,0.3); }
-
-        .btn-ghost {
-          background: transparent;
-          color: #888;
-          border: 1px solid rgba(255,255,255,0.1);
-          padding: 14px 32px;
-          border-radius: 50px;
-          font-family: 'Syne', sans-serif;
-          font-weight: 600;
-          font-size: 13px;
-          cursor: pointer;
-          transition: all 0.2s ease;
-          text-decoration: none;
-          display: inline-block;
-        }
-        .btn-ghost:hover { border-color: rgba(245,158,11,0.5); color: #f59e0b; }
-
-        input, textarea {
+        .nav-link:hover::after {
           width: 100%;
-          background: rgba(255,255,255,0.03);
-          border: 1px solid rgba(255,255,255,0.08);
-          border-radius: 12px;
-          padding: 12px 16px;
-          color: #f0f0f0;
-          font-family: 'Syne', sans-serif;
-          font-size: 14px;
-          outline: none;
-          transition: all 0.2s;
-          display: block;
         }
-        input:focus, textarea:focus { border-color: #f59e0b; box-shadow: 0 0 0 2px rgba(245,158,11,0.1); }
-        input::placeholder, textarea::placeholder { color: #444; }
-
-        .submit-btn {
-          width: 100%;
-          background: #f0f0f0;
-          color: #000;
-          border: none;
-          padding: 14px;
-          border-radius: 12px;
-          font-family: 'Syne', sans-serif;
-          font-weight: 700;
-          font-size: 14px;
-          cursor: pointer;
-          transition: all 0.2s;
+        input::placeholder, textarea::placeholder {
+          color: #444;
         }
-        .submit-btn:hover { background: #f59e0b; transform: translateY(-1px); }
-
-        .typewriter {
-          overflow: hidden;
-          border-right: 2px solid #f59e0b;
-          white-space: nowrap;
-          animation: typing 3.5s steps(40, end);
-        }
-        @keyframes typing {
-          from { width: 0; }
-          to { width: 100%; }
-        }
-
-        @media (max-width: 768px) {
-          .hero-title { font-size: 48px !important; }
-          .hide-mobile { display: none !important; }
-          .grid-2 { grid-template-columns: 1fr !important; }
-          .grid-3 { grid-template-columns: 1fr !important; }
-          .expertise-grid { grid-template-columns: 1fr !important; }
-          .card { padding: 20px !important; }
+        html {
+          scroll-behavior: smooth;
         }
       `}</style>
-
-      {/* Dot grid background */}
-      <div className="dot-grid" style={{ position: 'fixed', inset: 0, zIndex: 0, pointerEvents: 'none' }} />
-
-      {/* NAV */}
-      <nav style={{
-        position: 'fixed', top: 0, width: '100%', zIndex: 50,
-        background: scrolled ? 'rgba(8,8,8,0.85)' : 'transparent',
-        backdropFilter: scrolled ? 'blur(12px)' : 'blur(0px)',
-        WebkitBackdropFilter: scrolled ? 'blur(12px)' : 'blur(0px)',
-        borderBottom: scrolled ? '1px solid rgba(245,158,11,0.1)' : '1px solid transparent',
-        padding: scrolled ? '16px 0' : '28px 0',
-        transition: 'all 0.4s cubic-bezier(0.4, 0, 0.2, 1)'
-      }}>
-        <div style={{ maxWidth: 1100, margin: '0 auto', padding: '0 32px', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-          <div style={{ display: 'flex', alignItems: 'center', gap: 10 }}>
-            <span style={{ width: 7, height: 7, background: '#f59e0b', borderRadius: '50%' }} className="pulse" />
-            <span style={{ fontWeight: 800, fontSize: 18, letterSpacing: '-0.04em', color: '#f0f0f0' }}>
-              CHAMU<span style={{ color: '#f59e0b' }}>.</span>BUILDS
-            </span>
-          </div>
-          <div className="hide-mobile" style={{ display: 'flex', gap: 36 }}>
-            <a href="#expertise" className="nav-link">/expertise</a>
-            <a href="#work" className="nav-link">/work</a>
-            <a href="#building" className="nav-link">/now</a>
-            <a href="#contact" className="nav-link">/ping</a>
-          </div>
-          <a href="#contact" className="btn-primary" style={{ padding: '9px 22px', fontSize: 12 }}>
-            hire me
-          </a>
-        </div>
-      </nav>
-
-      <main style={{ position: 'relative', zIndex: 10, maxWidth: 1100, margin: '0 auto', padding: '0 32px' }}>
-
-        {/* ── HERO ── Enhanced with typing effect */}
-        <section style={{ paddingTop: 180, paddingBottom: 140 }}>
-          <div style={{ marginBottom: 28 }}>
-            <span className="fc" style={{
-              fontSize: 11, letterSpacing: '0.2em', color: '#f59e0b',
-              background: 'rgba(245,158,11,0.08)',
-              border: '1px solid rgba(245,158,11,0.2)',
-              padding: '6px 14px', borderRadius: 50, textTransform: 'uppercase'
-            }}>
-              Final Year SWE · Birmingham City University · 2026
-            </span>
-          </div>
-
-          <h1 className="hero-title" style={{
-            fontSize: 88, fontWeight: 800, lineHeight: 0.92,
-            letterSpacing: '-0.04em', color: '#f0f0f0',
-            marginBottom: 32, maxWidth: 820
-          }}>
-            I build the tools<br />
-            I <span style={{ color: '#f59e0b', fontStyle: 'italic', borderBottom: '2px solid #f59e0b' }}>wished</span> I had.
-          </h1>
-
-          <p style={{ fontSize: 20, color: '#666', maxWidth: 520, lineHeight: 1.6, marginBottom: 48 }}>
-            Full-stack engineer. Java specialist. Cloud-native thinker.
-            Based in Colombo 🇱🇰 — building from first principles.
-          </p>
-
-          <div style={{ display: 'flex', gap: 14, flexWrap: 'wrap', marginBottom: 64 }}>
-            <a href="#work" className="btn-primary">see my work →</a>
-            <a href="#contact" className="btn-ghost">/ping me</a>
-            <a href="#" className="btn-ghost" style={{ borderColor: '#f59e0b20' }}>📄 resume.pdf</a>
-          </div>
-
-          {/* GitHub stats bar — real credibility */}
-          <div style={{
-            display: 'flex', flexWrap: 'wrap', gap: 24,
-            padding: '20px 24px',
-            background: 'rgba(255,255,255,0.02)',
-            border: '1px solid rgba(255,255,255,0.05)',
-            borderRadius: 20,
-            marginBottom: 24
-          }}>
-            {Object.entries(GITHUB_STATS).map(([key, val]) => (
-              <div key={key} style={{ display: 'flex', alignItems: 'baseline', gap: 6 }}>
-                <span className="fc" style={{ fontSize: 10, color: '#555', textTransform: 'uppercase' }}>{key}:</span>
-                <span style={{ fontSize: 18, fontWeight: 700, color: '#f0f0f0' }}>
-                  {typeof val === 'number' ? val.toLocaleString() : (Array.isArray(val) ? val.join(' | ') : val)}
-                </span>
-              </div>
-            ))}
-          </div>
-
-          {/* Identity tags */}
-          <div style={{ display: 'flex', flexWrap: 'wrap', gap: 10 }}>
-            {[
-              '⚙ Robotics — All Island Competition',
-              '✦ AZ-900 Certified',
-              '◈ MERN · Java · Android',
-              '◉ Open for Internships 2026'
-            ].map(tag => (
-              <span key={tag} className="fc" style={{
-                fontSize: 11, color: '#555',
-                background: 'rgba(255,255,255,0.03)',
-                border: '1px solid rgba(255,255,255,0.07)',
-                padding: '7px 14px', borderRadius: 50
-              }}>{tag}</span>
-            ))}
-          </div>
-        </section>
-
-        {/* ── EXPERTISE ── Enhanced with descriptions */}
-        <section id="expertise" style={{ paddingBottom: 140 }}>
-          <div style={{ marginBottom: 48 }}>
-            <span className="fc amber" style={{ fontSize: 11, letterSpacing: '0.15em', textTransform: 'uppercase' }}>/expertise</span>
-            <h2 style={{ fontSize: 40, fontWeight: 800, color: '#f0f0f0', letterSpacing: '-0.03em', marginTop: 10 }}>
-              What I master.
-            </h2>
-            <p className="fc" style={{ fontSize: 12, color: '#444', marginTop: 8 }}>declared expertise, proven by shipped systems</p>
-          </div>
-
-          <div className="expertise-grid" style={{
-            display: 'grid',
-            gridTemplateColumns: 'repeat(2, 1fr)',
-            gap: 20
-          }}>
-            {EXPERTISE.map((item) => (
-              <div key={item.domain} className="card" style={{ padding: '32px' }}>
-                <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', marginBottom: 16 }}>
-                  <span style={{ fontSize: 28, color: '#f59e0b' }}>{item.icon}</span>
-                  <span className="fc" style={{
-                    fontSize: 9, color: '#f59e0b',
-                    background: 'rgba(245,158,11,0.1)',
-                    padding: '4px 10px', borderRadius: 20
-                  }}>proof → {item.proof}</span>
-                </div>
-                <h3 style={{ fontSize: 20, fontWeight: 700, color: '#f0f0f0', marginBottom: 8, letterSpacing: '-0.02em' }}>
-                  {item.domain}
-                </h3>
-                <p className="fc" style={{ fontSize: 11, color: '#555', marginBottom: 12 }}>{item.stack}</p>
-                <p style={{ fontSize: 13, color: '#666', lineHeight: 1.5 }}>{item.description}</p>
-              </div>
-            ))}
-          </div>
-        </section>
-
-        {/* ── WORK ── Enhanced with project selector */}
-        <section id="work" style={{ paddingBottom: 140 }}>
-          <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-end', marginBottom: 48, flexWrap: 'wrap', gap: 20 }}>
-            <div>
-              <span className="fc amber" style={{ fontSize: 11, letterSpacing: '0.15em', textTransform: 'uppercase' }}>/work</span>
-              <h2 style={{ fontSize: 40, fontWeight: 800, color: '#f0f0f0', letterSpacing: '-0.03em', marginTop: 10 }}>
-                Production systems.
-              </h2>
-              <p className="fc" style={{ fontSize: 11, color: '#444', marginTop: 6 }}>each one is proof of the expertise above</p>
-            </div>
-            <div style={{
-              display: 'flex', background: 'rgba(255,255,255,0.04)',
-              border: '1px solid rgba(255,255,255,0.07)',
-              borderRadius: 14, padding: 4, gap: 2
-            }}>
-              {['architecture', 'metrics', 'stack'].map(tab => (
-                <button
-                  key={tab}
-                  onClick={() => setActiveTab(tab)}
-                  className={`tab-btn ${activeTab === tab ? 'active' : ''}`}
-                >
-                  /{tab}
-                </button>
-              ))}
-            </div>
-          </div>
-
-          {/* Project selector sidebar + detail view */}
-          <div style={{ display: 'grid', gridTemplateColumns: '280px 1fr', gap: 24 }}>
-            {/* Project selector */}
-            <div style={{ display: 'flex', flexDirection: 'column', gap: 8 }}>
-              {PROJECTS.map((p) => (
-                <div
-                  key={p.id}
-                  onClick={() => setActiveProject(p.id)}
-                  className={`project-btn ${activeProject === p.id ? 'active' : ''}`}
-                >
-                  <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 4 }}>
-                    <span style={{ fontWeight: 700, color: activeProject === p.id ? '#f59e0b' : '#f0f0f0' }}>
-                      {p.title}
-                    </span>
-                    <span className="fc" style={{ fontSize: 8, color: '#444' }}>{p.status}</span>
-                  </div>
-                  <p style={{ fontSize: 11, color: '#555' }}>{p.tagline}</p>
-                </div>
-              ))}
-            </div>
-
-            {/* Detail view */}
-            {currentProject && (
-              <div className="card" style={{ padding: '36px' }}>
-                <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', marginBottom: 20, flexWrap: 'wrap', gap: 12 }}>
-                  <div>
-                    <span className="fc" style={{ fontSize: 10, color: '#f59e0b', letterSpacing: '0.15em', textTransform: 'uppercase' }}>
-                      {currentProject.category}
-                    </span>
-                    <h3 style={{ fontSize: 28, fontWeight: 800, color: '#f0f0f0', letterSpacing: '-0.03em', marginTop: 6 }}>
-                      {currentProject.title}
-                    </h3>
-                    <p style={{ fontSize: 14, color: '#f59e0b', fontStyle: 'italic', marginTop: 4 }}>{currentProject.tagline}</p>
-                  </div>
-                  <div style={{ display: 'flex', gap: 8 }}>
-                    <a href={currentProject.github} className="fc" style={{ fontSize: 11, color: '#555', textDecoration: 'none', padding: '6px 12px', background: 'rgba(255,255,255,0.03)', borderRadius: 8 }}>
-                      github →
-                    </a>
-                    <a href={currentProject.live} className="fc" style={{ fontSize: 11, color: '#555', textDecoration: 'none', padding: '6px 12px', background: 'rgba(255,255,255,0.03)', borderRadius: 8 }}>
-                      live →
-                    </a>
-                  </div>
-                </div>
-
-                <p style={{ fontSize: 14, color: '#888', lineHeight: 1.6, marginBottom: 24 }}>{currentProject.one_line}</p>
-
-                {activeTab === 'architecture' && (
-                  <div>
-                    <p className="fc" style={{ fontSize: 10, color: '#f59e0b', letterSpacing: '0.15em', textTransform: 'uppercase', marginBottom: 16 }}>
-                      system architecture
-                    </p>
-                    <p style={{
-                      fontSize: 15, color: '#c8c8c8', fontStyle: 'italic',
-                      lineHeight: 1.7, borderLeft: '2px solid #f59e0b',
-                      paddingLeft: 20
-                    }}>
-                      "{currentProject.architecture}"
-                    </p>
-                  </div>
-                )}
-
-                {activeTab === 'metrics' && (
-                  <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: 24 }}>
-                    {Object.entries(currentProject.metrics).map(([k, v]) => (
-                      <div key={k}>
-                        <p className="fc" style={{ fontSize: 9, color: '#555', textTransform: 'uppercase', letterSpacing: '0.15em', marginBottom: 8 }}>{k}</p>
-                        <p style={{ fontSize: 20, fontWeight: 700, color: '#f0f0f0', letterSpacing: '-0.02em' }}>{v}</p>
-                      </div>
-                    ))}
-                  </div>
-                )}
-
-                {activeTab === 'stack' && (
-                  <div style={{ display: 'flex', flexWrap: 'wrap', gap: 10 }}>
-                    {currentProject.tech.map(t => (
-                      <span key={t} className="fc" style={{
-                        fontSize: 12, color: '#888',
-                        background: 'rgba(255,255,255,0.04)',
-                        border: '1px solid rgba(255,255,255,0.08)',
-                        padding: '8px 16px', borderRadius: 10
-                      }}>{t}</span>
-                    ))}
-                  </div>
-                )}
-              </div>
-            )}
-          </div>
-
-          <div style={{ marginTop: 56, display: 'flex', justifyContent: 'center' }}>
-            <a href="/projects" className="btn-ghost" style={{ 
-              display: 'inline-flex', alignItems: 'center', gap: 10, 
-              padding: '14px 32px', fontSize: 13, 
-              border: '1px solid rgba(245,158,11,0.2)',
-              textDecoration: 'none'
-            }}>
-              view all projects <span style={{ color: '#f59e0b', fontSize: 16 }}>→</span>
-            </a>
-          </div>
-        </section>
-
-        {/* ── CURRENTLY BUILDING ── Enhanced with better visuals */}
-        <section id="building" style={{ paddingBottom: 140 }}>
-          <span className="fc amber" style={{ fontSize: 11, letterSpacing: '0.15em', textTransform: 'uppercase' }}>/now</span>
-          <h2 style={{ fontSize: 40, fontWeight: 800, color: '#f0f0f0', letterSpacing: '-0.03em', marginTop: 10, marginBottom: 48 }}>
-            Currently building <span style={{ color: '#f59e0b' }}>CodePrep</span>.
-          </h2>
-
-          <div className="grid-2" style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 24 }}>
-            {/* Phase tracker - enhanced */}
-            <div className="card" style={{ padding: '36px' }}>
-              <p className="fc" style={{ fontSize: 10, color: '#555', letterSpacing: '0.15em', textTransform: 'uppercase', marginBottom: 28 }}>
-                module roadmap
-              </p>
-              <div style={{ position: 'relative' }}>
-                {PHASES.map((phase, i) => (
-                  <div key={phase.name} style={{ display: 'flex', gap: 16, marginBottom: 28, position: 'relative' }}>
-                    {i < PHASES.length - 1 && (
-                      <div style={{
-                        position: 'absolute', left: 9, top: 22, bottom: -20,
-                        width: 1.5,
-                        background: phase.done ? 'rgba(245,158,11,0.4)' : 'rgba(255,255,255,0.05)'
-                      }} />
-                    )}
-                    <div style={{
-                      width: 20, height: 20, borderRadius: '50%', flexShrink: 0, marginTop: 2,
-                      background: phase.done ? '#f59e0b' : phase.active ? 'transparent' : 'rgba(255,255,255,0.06)',
-                      border: phase.active ? '2px solid #f59e0b' : phase.done ? 'none' : '1px solid rgba(255,255,255,0.1)',
-                      display: 'flex', alignItems: 'center', justifyContent: 'center'
-                    }}>
-                      {phase.active && <span style={{ width: 8, height: 8, borderRadius: '50%', background: '#f59e0b' }} className="pulse" />}
-                      {phase.done && <span style={{ fontSize: 10, color: '#000' }}>✓</span>}
-                    </div>
-                    <div style={{ flex: 1 }}>
-                      <div style={{ display: 'flex', alignItems: 'center', gap: 8, marginBottom: 4 }}>
-                        <span style={{ fontSize: 16 }}>{phase.icon}</span>
-                        <p style={{
-                          fontSize: 14, fontWeight: 600,
-                          color: phase.done ? '#f0f0f0' : phase.active ? '#f59e0b' : '#444'
-                        }}>{phase.name}</p>
-                      </div>
-                      <p style={{ fontSize: 12, color: '#555', lineHeight: 1.5 }}>{phase.desc}</p>
-                    </div>
-                  </div>
-                ))}
-              </div>
-
-              <div style={{ marginTop: 20 }}>
-                <div style={{ height: 4, background: 'rgba(255,255,255,0.06)', borderRadius: 10, overflow: 'hidden' }}>
-                  <div style={{ height: '100%', width: '65%', background: '#f59e0b', borderRadius: 10 }} />
-                </div>
-                <div style={{ display: 'flex', justifyContent: 'space-between', marginTop: 10 }}>
-                  <span className="fc" style={{ fontSize: 10, color: '#444' }}>Phase 3 of 4</span>
-                  <span className="fc" style={{ fontSize: 10, color: '#f59e0b' }}>65% complete</span>
-                </div>
-              </div>
-            </div>
-
-            {/* Terminal - enhanced with cursor animation */}
-            <div className="card" style={{ padding: '0', overflow: 'hidden' }}>
-              <div style={{
-                background: 'rgba(255,255,255,0.03)',
-                padding: '14px 20px',
-                borderBottom: '1px solid rgba(255,255,255,0.05)',
-                display: 'flex', alignItems: 'center', gap: 8
-              }}>
-                {['#ef4444','#f59e0b','#22c55e'].map(c => (
-                  <span key={c} style={{ width: 10, height: 10, borderRadius: '50%', background: c, opacity: 0.6 }} />
-                ))}
-                <span className="fc" style={{ fontSize: 10, color: '#444', marginLeft: 8 }}>codeprep — zsh</span>
-              </div>
-              <div style={{ padding: '28px', fontFamily: 'Fira Code, monospace' }}>
-                <div style={{ marginBottom: 24 }}>
-                  <p style={{ fontSize: 11, color: '#444', marginBottom: 12 }}>$ git log --oneline -4</p>
-                  <div style={{ display: 'flex', flexDirection: 'column', gap: 10 }}>
-                    {[
-                      ['a3f91bc', '✨', 'feat: industry-bound task system scaffolded'],
-                      ['7d2e04a', '⚙️', 'feat: onecompiler api integration — live exec'],
-                      ['3b81cc2', '🐛', 'fix: 500 on /execute — endpoint url corrected'],
-                      ['9a14d71', '🔨', 'refactor: module phase gating logic'],
-                    ].map(([hash, emoji, msg]) => (
-                      <div key={hash} style={{ display: 'flex', gap: 10, alignItems: 'center', fontSize: 11 }}>
-                        <span style={{ color: '#f59e0b', flexShrink: 0 }}>{hash}</span>
-                        <span style={{ fontSize: 12 }}>{emoji}</span>
-                        <span style={{ color: '#666' }}>{msg}</span>
-                      </div>
-                    ))}
-                  </div>
-                </div>
-                <div style={{ borderTop: '1px solid rgba(255,255,255,0.05)', paddingTop: 20 }}>
-                  <div style={{ display: 'flex', alignItems: 'center', gap: 8, marginBottom: 12 }}>
-                    <span style={{ fontSize: 11, color: '#444' }}>$</span>
-                    <span style={{ fontSize: 11, color: '#f0f0f0' }}>npm run dev</span>
-                  </div>
-                  <p style={{ fontSize: 11, color: '#22c55e', marginBottom: 16 }}>
-                    ▶ ready on localhost:3000
-                  </p>
-                  <div style={{ display: 'flex', alignItems: 'center', gap: 8, justifyContent: 'space-between' }}>
-                    <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
-                      <span style={{ width: 6, height: 6, background: '#f59e0b', borderRadius: '50%' }} className="pulse" />
-                      <span style={{ fontSize: 10, color: '#555' }}>last commit: 3 hours ago</span>
-                    </div>
-                    <div style={{ display: 'flex', gap: 4 }}>
-                      <span style={{ fontSize: 10, color: '#444' }}>chamu@codeprep</span>
-                      <span style={{ fontSize: 10, color: '#f59e0b', opacity: cursorVisible ? 1 : 0 }}>█</span>
-                    </div>
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div>
-        </section>
-
-        {/* ── CONTACT ── Enhanced */}
-        <section id="contact" style={{ paddingBottom: 80 }}>
-          <div className="card" style={{
-            padding: '64px',
-            background: 'linear-gradient(135deg, rgba(245,158,11,0.04) 0%, rgba(255,255,255,0.01) 100%)',
-            borderRadius: 32
-          }}>
-            <div className="grid-2" style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 64, alignItems: 'start' }}>
-              <div>
-                <span className="fc amber" style={{ fontSize: 11, letterSpacing: '0.15em', textTransform: 'uppercase' }}>/contact</span>
-                <h2 style={{ fontSize: 44, fontWeight: 800, color: '#f0f0f0', letterSpacing: '-0.04em', lineHeight: 1.1, marginTop: 12, marginBottom: 20 }}>
-                  Let's build<br />something real.
-                </h2>
-                <p style={{ fontSize: 15, color: '#555', lineHeight: 1.7, marginBottom: 40, maxWidth: 340 }}>
-                  Open for Software Engineering internships, freelance work, or just a solid engineering conversation.
-                </p>
-                <div style={{ display: 'flex', flexDirection: 'column', gap: 14 }}>
-                  {[
-                    ['◈', 'github.com/chamuditha', 'https://github.com/chamuditha-t'],
-                    ['◉', 'linkedin.com/in/chamuditha', 'www.linkedin.com/in/chamuditha-theekshana-b138993a6'],
-                    ['◫', 'Colombo, Sri Lanka 🇱🇰', null],
-                  ].map(([icon, text, link]) => (
-                    link ? (
-                      <a key={text} href={link} target="_blank" rel="noopener noreferrer" style={{ display: 'flex', alignItems: 'center', gap: 12, textDecoration: 'none' }}>
-                        <span style={{ color: '#f59e0b', fontSize: 14 }}>{icon}</span>
-                        <span className="fc" style={{ fontSize: 12, color: '#555', transition: 'color 0.2s' }}>{text}</span>
-                      </a>
-                    ) : (
-                      <div key={text} style={{ display: 'flex', alignItems: 'center', gap: 12 }}>
-                        <span style={{ color: '#f59e0b', fontSize: 14 }}>{icon}</span>
-                        <span className="fc" style={{ fontSize: 12, color: '#555' }}>{text}</span>
-                      </div>
-                    )
-                  ))}
-                </div>
-              </div>
-              <div>
-                <form onSubmit={handleSubmit} style={{ display: 'flex', flexDirection: 'column', gap: 14 }}>
-                  <input
-                    type="text" placeholder="name"
-                    value={formData.name}
-                    onChange={e => setFormData({ ...formData, name: e.target.value })}
-                    required
-                  />
-                  <input
-                    type="email" placeholder="email"
-                    value={formData.email}
-                    onChange={e => setFormData({ ...formData, email: e.target.value })}
-                    required
-                  />
-                  <textarea
-                    rows={4} placeholder="what are you building?"
-                    value={formData.message}
-                    onChange={e => setFormData({ ...formData, message: e.target.value })}
-                    style={{ resize: 'none' }}
-                    required
-                  />
-                  <button type="submit" className="submit-btn">send message →</button>
-                  {formStatus === 'success' && (
-                    <p className="fc" style={{ fontSize: 12, color: '#22c55e', textAlign: 'center' }}>✓ sent! I'll reply within 48h.</p>
-                  )}
-                  {formStatus === 'error' && (
-                    <p className="fc" style={{ fontSize: 12, color: '#ef4444', textAlign: 'center' }}>✗ all fields required.</p>
-                  )}
-                </form>
-              </div>
-            </div>
-          </div>
-        </section>
-
-        <footer style={{ borderTop: '1px solid rgba(255,255,255,0.04)', padding: '40px 0', textAlign: 'center' }}>
-          <p className="fc" style={{ fontSize: 10, color: '#2a2a2a', letterSpacing: '0.4em', textTransform: 'uppercase' }}>
-            © 2026 CHAMU.BUILDS · EXPERTISE FIRST · SYSTEMS THAT SCALE
-          </p>
-        </footer>
-
-      </main>
     </div>
   );
 }

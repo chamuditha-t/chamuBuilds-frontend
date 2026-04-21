@@ -722,7 +722,6 @@ export default function ChamuBuilds() {
                   ))}
                 </div>
               </div>
-
               <div>
                 <form onSubmit={handleSubmit} style={{ display: 'flex', flexDirection: 'column', gap: 14 }}>
                   <input

@@ -1,3 +1,4 @@
+import axios from 'axios';
 import React, { useState, useEffect } from 'react';
 
 const EXPERTISE = [
@@ -109,10 +110,13 @@ export default function ChamuBuilds() {
     };
   }, []);
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
     if (formData.name && formData.email && formData.message) {
       setFormStatus("success");
+
+      const respnose = await axios.post('http://localhost:3000/api/messages', formData);
+      console.log(respnose);
       setFormData({ name: "", email: "", message: "" });
       setTimeout(() => setFormStatus(null), 3000);
     } else {
@@ -700,8 +704,8 @@ export default function ChamuBuilds() {
                 </p>
                 <div style={{ display: 'flex', flexDirection: 'column', gap: 14 }}>
                   {[
-                    ['◈', 'github.com/chamuditha', 'https://github.com/chamuditha'],
-                    ['◉', 'linkedin.com/in/theekshana-c', 'https://linkedin.com/in/theekshana-c'],
+                    ['◈', 'github.com/chamuditha', 'https://github.com/chamuditha-t'],
+                    ['◉', 'linkedin.com/in/chamuditha', 'www.linkedin.com/in/chamuditha-theekshana-b138993a6'],
                     ['◫', 'Colombo, Sri Lanka 🇱🇰', null],
                   ].map(([icon, text, link]) => (
                     link ? (

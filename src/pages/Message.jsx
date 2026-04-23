@@ -10,7 +10,7 @@ const Message = () => {
   const [stats, setStats] = useState({ total: 0, unread: 0, read: 0 });
 
   // Base API URL
-  const API_URL = "http://localhost:3000/api/messages";
+  const API_URL = "https://codeprep-backend.onrender.com/api/messages";
 
   // 1. FETCH ALL MESSAGES
   const fetchMessages = async () => {

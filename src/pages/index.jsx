@@ -537,13 +537,13 @@ export default function ChamuBuilds() {
           </div>
 
           <div className="mt-10 md:mt-14 flex justify-center">
-            <a
-              href="/projects"
+            <Link
+              to="/projects"
               className="bg-transparent text-[#888] border border-amber-500/20 px-6 md:px-8 py-3 md:py-3.5 rounded-full text-xs md:text-[13px] font-semibold hover:border-amber-500/50 hover:text-amber-500 transition-all inline-flex items-center gap-2 no-underline"
             >
               view all projects{" "}
               <span className="text-amber-500 text-sm md:text-base">→</span>
-            </a>
+            </Link>
           </div>
         </section>
 

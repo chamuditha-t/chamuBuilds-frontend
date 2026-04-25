@@ -1,5 +1,5 @@
-import { HashRouter as Router, Routes, Route } from "react-router-dom"; // HashRouter import කරන්න
-import Home from "./pages/index";
+import { HashRouter as Router, Routes, Route } from "react-router-dom";
+import Home from "./pages/index"; // ඔයාගේ ලොකු ChamuBuilds code එක තියෙන්නේ මෙතන
 import Projects from "./pages/Projects";
 import ProjectDetail from "./pages/ProjectDetail";
 import Admin from "./pages/Admin";

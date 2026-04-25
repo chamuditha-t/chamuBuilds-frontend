@@ -7,7 +7,7 @@ import Message from "./pages/Message";
 
 export default function App() {
   return (
-    <Router>  
+    <Router>
       <Routes>
         <Route path="/" element={<Home />} />
         <Route path="/projects" element={<Projects />} />

@@ -1,1 +1,66 @@
 @import "tailwindcss";
+
+@layer base {
+  html {
+    scroll-behavior: smooth;
+  }
+}
+
+.dot-grid {
+  background-image: radial-gradient(rgba(245, 158, 11, 0.03) 1px, transparent 1px);
+  background-size: 32px 32px;
+}
+
+.pulse {
+  animation: pulse 2.5s ease-in-out infinite;
+}
+
+@keyframes pulse {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.3; }
+}
+
+.card {
+  transition: all 0.3s cubic-bezier(0.2, 0.9, 0.4, 1.1);
+}
+
+.card:hover {
+  border-color: rgba(245, 158, 11, 0.25);
+  transform: translateY(-4px);
+}
+
+.project-btn {
+  transition: all 0.2s ease;
+}
+
+.project-btn:hover {
+  border-color: rgba(245, 158, 11, 0.4);
+  transform: translateX(4px);
+}
+
+.nav-link::after {
+  content: '';
+  position: absolute;
+  bottom: -4px;
+  left: 0;
+  width: 0;
+  height: 1px;
+  background: #f59e0b;
+  transition: width 0.2s;
+}
+
+.nav-link:hover::after {
+  width: 100%;
+}
+
+input::placeholder, textarea::placeholder {
+  color: #444;
+}
+
+.tab-btn {
+  @apply font-mono text-[#555] uppercase tracking-wider transition-all duration-200 rounded-lg;
+}
+
+.tab-btn.active {
+  @apply text-amber-500 bg-amber-500/10;
+}

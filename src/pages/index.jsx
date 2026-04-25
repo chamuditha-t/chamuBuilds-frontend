@@ -126,10 +126,9 @@ const GITHUB_STATS = {
   languages: ["JavaScript", "TypeScript", "Java", "Python"],
 };
 
-export default function ChamuBuilds() {
+export default function Home() {
   const [activeTab, setActiveTab] = useState("architecture");
   const [activeProject, setActiveProject] = useState("codeprep");
-  const [scrolled, setScrolled] = useState(false);
   const [formData, setFormData] = useState({
     name: "",
     email: "",
@@ -137,18 +136,13 @@ export default function ChamuBuilds() {
   });
   const [formStatus, setFormStatus] = useState(null);
   const [cursorVisible, setCursorVisible] = useState(true);
-  const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
 
   useEffect(() => {
-    const handleScroll = () => setScrolled(window.scrollY > 50);
-    window.addEventListener("scroll", handleScroll);
-
     const cursorInterval = setInterval(() => {
       setCursorVisible((v) => !v);
     }, 530);
 
     return () => {
-      window.removeEventListener("scroll", handleScroll);
       clearInterval(cursorInterval);
     };
   }, []);
@@ -180,109 +174,6 @@ export default function ChamuBuilds() {
     <div className="bg-[#080808] text-[#c8c8c8] min-h-screen font-['Syne',sans-serif] overflow-x-hidden">
       {/* Dot grid background */}
       <div className="dot-grid fixed inset-0 z-0 pointer-events-none" />
-
-      {/* NAV - Responsive */}
-      <nav
-        className={`fixed top-0 w-full z-50 transition-all duration-500 ${
-          scrolled
-            ? "bg-black/85 backdrop-blur-xl border-b border-amber-500/10 py-3"
-            : "bg-transparent py-5 md:py-7"
-        }`}
-      >
-        <div className="max-w-6xl mx-auto px-5 md:px-8 flex justify-between items-center">
-          <div className="flex items-center gap-2.5">
-            <span className="w-1.5 h-1.5 bg-amber-500 rounded-full pulse" />
-            <span className="font-extrabold text-base md:text-lg tracking-tighter text-[#f0f0f0]">
-              CHAMU<span className="text-amber-500">.</span>BUILDS
-            </span>
-          </div>
-
-          {/* Desktop Navigation */}
-          <div className="hidden md:flex gap-9">
-            <a
-              href="#expertise"
-              className="nav-link text-xs tracking-wider text-[#555] hover:text-amber-500 transition-all duration-200 relative after:content-[''] after:absolute after:bottom-[-4px] after:left-0 after:w-0 after:h-px after:bg-amber-500 after:transition-all hover:after:w-full"
-            >
-              /expertise
-            </a>
-            <a
-              href="#work"
-              className="nav-link text-xs tracking-wider text-[#555] hover:text-amber-500 transition-all duration-200 relative after:content-[''] after:absolute after:bottom-[-4px] after:left-0 after:w-0 after:h-px after:bg-amber-500 after:transition-all hover:after:w-full"
-            >
-              /work
-            </a>
-            <a
-              href="#building"
-              className="nav-link text-xs tracking-wider text-[#555] hover:text-amber-500 transition-all duration-200 relative after:content-[''] after:absolute after:bottom-[-4px] after:left-0 after:w-0 after:h-px after:bg-amber-500 after:transition-all hover:after:w-full"
-            >
-              /now
-            </a>
-            <a
-              href="#contact"
-              className="nav-link text-xs tracking-wider text-[#555] hover:text-amber-500 transition-all duration-200 relative after:content-[''] after:absolute after:bottom-[-4px] after:left-0 after:w-0 after:h-px after:bg-amber-500 after:transition-all hover:after:w-full"
-            >
-              /ping
-            </a>
-          </div>
-
-          {/* Mobile Menu Button */}
-          <button
-            onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
-            className="md:hidden text-[#f0f0f0] text-2xl focus:outline-none z-50 relative"
-          >
-            {mobileMenuOpen ? "✕" : "☰"}
-          </button>
-
-          {/* Desktop Hire Button */}
-          <a
-            href="#contact"
-            className="hidden md:inline-block bg-amber-500 text-black px-5 py-2 rounded-full text-xs font-bold hover:bg-amber-400 transition-all hover:scale-105"
-          >
-            hire me
-          </a>
-        </div>
-
-        {/* Mobile Menu */}
-        {mobileMenuOpen && (
-          <div className="md:hidden absolute top-full left-0 w-full bg-black/95 backdrop-blur-xl border-b border-amber-500/20 py-6 px-5 flex flex-col gap-5 z-40">
-            <a
-              href="#expertise"
-              onClick={() => setMobileMenuOpen(false)}
-              className="text-sm text-[#ccc] hover:text-amber-500 transition-colors font-mono tracking-wider"
-            >
-              /expertise
-            </a>
-            <a
-              href="#work"
-              onClick={() => setMobileMenuOpen(false)}
-              className="text-sm text-[#ccc] hover:text-amber-500 transition-colors font-mono tracking-wider"
-            >
-              /work
-            </a>
-            <a
-              href="#building"
-              onClick={() => setMobileMenuOpen(false)}
-              className="text-sm text-[#ccc] hover:text-amber-500 transition-colors font-mono tracking-wider"
-            >
-              /now
-            </a>
-            <a
-              href="#contact"
-              onClick={() => setMobileMenuOpen(false)}
-              className="text-sm text-[#ccc] hover:text-amber-500 transition-colors font-mono tracking-wider"
-            >
-              /ping
-            </a>
-            <a
-              href="#contact"
-              onClick={() => setMobileMenuOpen(false)}
-              className="bg-amber-500 text-black px-5 py-2 rounded-full text-xs font-bold text-center w-full"
-            >
-              hire me
-            </a>
-          </div>
-        )}
-      </nav>
 
       <main className="relative z-10 max-w-6xl mx-auto px-5 md:px-8">
         {/* HERO SECTION - Responsive */}
@@ -837,52 +728,6 @@ export default function ChamuBuilds() {
         </footer>
       </main>
 
-      <style>{`
-        .dot-grid {
-          background-image: radial-gradient(rgba(245,158,11,0.03) 1px, transparent 1px);
-          background-size: 32px 32px;
-        }
-        .pulse {
-          animation: pulse 2.5s ease-in-out infinite;
-        }
-        @keyframes pulse {
-          0%, 100% { opacity: 1; }
-          50% { opacity: 0.3; }
-        }
-        .card {
-          transition: all 0.3s cubic-bezier(0.2, 0.9, 0.4, 1.1);
-        }
-        .card:hover {
-          border-color: rgba(245,158,11,0.25);
-          transform: translateY(-4px);
-        }
-        .project-btn {
-          transition: all 0.2s ease;
-        }
-        .project-btn:hover {
-          border-color: rgba(245,158,11,0.4);
-          transform: translateX(4px);
-        }
-        .nav-link::after {
-          content: '';
-          position: absolute;
-          bottom: -4px;
-          left: 0;
-          width: 0;
-          height: 1px;
-          background: #f59e0b;
-          transition: width 0.2s;
-        }
-        .nav-link:hover::after {
-          width: 100%;
-        }
-        input::placeholder, textarea::placeholder {
-          color: #444;
-        }
-        html {
-          scroll-behavior: smooth;
-        }
-      `}</style>
     </div>
   );
 }

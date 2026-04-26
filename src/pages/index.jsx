@@ -1,4 +1,5 @@
 import axios from "axios";
+import config from "../config";
 import React, { useState, useEffect } from "react";
 import { Link } from 'react-router-dom';
 
@@ -153,7 +154,7 @@ export default function Home() {
       setFormStatus("success");
       try {
         const response = await axios.post(
-          "https://codeprep-backend.onrender.com/api/messages",
+          `${config.BASE_URL}/api/messages`,
           formData,
         );
         console.log(response);

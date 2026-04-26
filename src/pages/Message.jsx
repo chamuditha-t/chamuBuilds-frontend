@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from "react";
 import axios from "axios";
+import config from "../config";
 
 const Message = () => {
   const [messages, setMessages] = useState([]);
@@ -10,7 +11,7 @@ const Message = () => {
   const [stats, setStats] = useState({ total: 0, unread: 0, read: 0 });
 
   // Base API URL
-  const API_URL = "https://codeprep-backend.onrender.com/api/messages";
+  const API_URL = `${config.BASE_URL}/api/messages`;
 
   // 1. FETCH ALL MESSAGES
   const fetchMessages = async () => {
@@ -43,7 +44,8 @@ const Message = () => {
   const toggleReadStatus = async (id, currentStatus) => {
     try {
       const newStatus = !currentStatus;
-      await axios.patch(`${API_URL}/${id}`, { read: newStatus });
+      // Backend expects PUT /api/messages/:id/read
+      await axios.put(`${API_URL}/${id}/read`, { read: newStatus });
 
       // Update UI locally
       setMessages((prev) =>

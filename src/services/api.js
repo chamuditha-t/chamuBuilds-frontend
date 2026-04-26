@@ -3,6 +3,9 @@
   Replace these with your actual fetch/axios calls to your backend.
 */
 import axios from 'axios';
+import config from '../config';
+
+const API_BASE_URL = config.BASE_URL;
 
 const MOCK_PROJECTS = [
   {
@@ -76,7 +79,7 @@ const MOCK_PROJECTS = [
 
 export const getProjects = async () => {
   try {
-    const response = await axios.get('https://codeprep-backend.onrender.com/api/projects');
+    const response = await axios.get(`${API_BASE_URL}/api/projects`);
     return response.data;
   } catch (error) {
     console.error('Error fetching projects from backend API:', error);
@@ -86,7 +89,7 @@ export const getProjects = async () => {
 
 export const getProjectById = async (id) => {
   try {
-    const response = await axios.get(`https://codeprep-backend.onrender.com/api/projects/${id}`);
+    const response = await axios.get(`${API_BASE_URL}/api/projects/${id}`);
     return response.data;
   } catch (error) {
     console.error(`Error fetching project ${id} from backend API:`, error);
@@ -97,7 +100,7 @@ export const getProjectById = async (id) => {
 export const addProject = async (newProject) => {
   console.log("Sending structured project to backend via Axios:", newProject);
   try {
-    const response = await axios.post('https://codeprep-backend.onrender.com/api/projects', newProject);
+    const response = await axios.post(`${API_BASE_URL}/api/projects`, newProject);
     return response.data;
   } catch (error) {
     console.error("Error posting project to backend API:", error);

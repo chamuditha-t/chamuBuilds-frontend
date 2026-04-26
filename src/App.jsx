@@ -1,7 +1,7 @@
-import { HashRouter as Router, Routes, Route } from "react-router-dom";
+import { BrowserRouter as Router, Routes, Route } from "react-router-dom"; // HashRouter අයින් කරා
 import ScrollToTop from "./components/ScrollToTop";
 import Navbar from "./components/Navbar";
-import Home from "./pages/index"; // ඔයාගේ ලොකු ChamuBuilds code එක තියෙන්නේ මෙතන
+import Home from "./pages/index";
 import Projects from "./pages/Projects";
 import ProjectDetail from "./pages/ProjectDetail";
 import Admin from "./pages/Admin";

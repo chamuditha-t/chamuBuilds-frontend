@@ -79,7 +79,7 @@ const MOCK_PROJECTS = [
 
 export const getProjects = async () => {
   try {
-    const response = await axios.get(`https://chamubuilds-backend.onrender.com/api/projects`);
+    const response = await axios.get(`${API_BASE_URL}/api/projects`);
     return response.data;
   } catch (error) {
     console.error('Error fetching projects from backend API:', error);
